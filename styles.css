@@ -1,0 +1,72 @@
+.gradient-text {
+    background-image: linear-gradient(
+        to bottom right, 
+        #ff26b2,
+        #aa49d8,
+        #526cfe,
+        #3f51b5
+    );
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.contact-header > * {
+    padding-bottom: 2rem;
+}
+
+.contact-header a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 1rem;
+    transition: color .2s;
+}
+
+.app-icon {
+	width: 10rem;
+	height: 10rem;
+	border-radius: 20%;
+    transition: filter .2s;
+}
+
+.contact-header a:hover .app-icon {
+    filter: grayscale(50%);
+}
+
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    list-style: none;
+    font-weight: 300;
+    font-size: 2rem;
+}
+
+.contact-link {
+    padding: 0.5rem 0;
+}
+
+.contact-link a {
+    display: flex;
+    align-items: center;
+}
+
+.contact-link a:hover .icon {
+    filter: brightness(0.8);
+}
+
+.contact-link > * .icon {
+    padding-right: 2rem;
+}
+
+.contact-link ul, li {
+    list-style: none;
+}
+
+.icon {
+    filter: brightness(0.6);
+    transition: filter .2s;
+    width: 2rem;
+    height: 2rem;
+}
