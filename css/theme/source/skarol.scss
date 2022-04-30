@@ -1,0 +1,66 @@
+/**
+ * skarol theme for reveal.js.
+ * Author: Karolina Samorek
+ */
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+// Include theme-specific fonts
+@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap);
+
+/**
+ * Solarized colors by Ethan Schoonover
+ */
+html * {
+	color-profile: sRGB;
+	rendering-intent: auto;
+}
+
+$accentPrimaryDefault: #536DFE;
+// $accentPrimaryHighlighted: #7388FF;
+$accentSecondaryDefault: #AA49D8;
+$accentSecondaryHighlighted: #BE7FDD;
+
+$backgroundPrimaryLight: #F5F5F5;
+$backgroundPrimaryDark: #222222;
+$backgroundSecondaryLight: #E9E9E9;
+$backgroundSecondaryDark: #353535;
+
+// $textOnColor: #FAFAFA;
+$textPrimaryLight: #848484;
+$textPrimaryDark: #9A9899;
+$textSecondaryLight: #484848;
+$textSecondaryDark: #bebebe;
+
+$gradientStart: #FF26B2;
+$gradientEnd: #3F51B5;
+
+// Override theme settings (see ../template/settings.scss)
+$mainFont: 'Poppins', sans-serif;
+$headingFont: 'Poppins', sans-serif;
+
+$headingTextShadow: none;
+$headingTextTransform: none;
+
+// Light
+// $mainColor: $textSecondaryLight;
+// $headingColor: $textPrimaryLight; 
+// $backgroundColor: $backgroundPrimaryLight;
+
+// Dark
+$backgroundColor: $backgroundPrimaryDark;
+$mainColor: $textSecondaryDark;
+$headingColor: $textPrimaryDark;
+
+$linkColor: $accentSecondaryHighlighted;
+$linkColorHover: $mainColor; // lighten( $linkColor, 20% );
+$selectionBackgroundColor: $accentSecondaryDefault;
+
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------
