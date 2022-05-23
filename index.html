@@ -17,12 +17,15 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>
+				<section data-timing="20">
 					<h2 class="gradient-text">
 						<p>Approaching Design System</p>
 						<p>in iOS Environment</p>
 					</h2>
-					<aside class="notes">
+					<aside class="notes" data-markdown>
+						Hello everyone.
+						
+						Today I will talk about a way of approaching Design System to make this experience as delightfully as possible.
 					</aside>
 				</section>
 				<section class="contact">
@@ -35,22 +38,7 @@
 							</a>
 						</h5>
 					</div>
-					<ul class="contact-links">
-						<li>
-						  <div class="contact-link">
-							<a href="mailto:karolina.samorek@gmail.com" target="_blank" rel="noreferrer">
-							  <img class="icon" src="/assets/icons/mail.svg" alt="icon"/>
-							  karolina.samorek@gmail.com
-							</a>
-						  </div>
-						</li>
-						<li>
-						  <div class="contact-link">
-							<a href="https://bit.ly/3dR28Wl" target="_blank" rel="noreferrer">
-							  <img class="icon" src="/assets/icons/linkedin.svg" alt="icon"/>@karolina.samorek
-							</a>
-						  </div>
-						</li>
+					<ul class="contact-links" style="list-style:none">
 						<li>
 						  <div class="contact-link">
 							<a href="https://bit.ly/3dQx4pB" target="_blank" rel="noreferrer">
@@ -65,16 +53,551 @@
 							</a>
 						  </div>
 						</li>
+						<!-- <li>
+						  <div class="contact-link">
+							<a href="mailto:karolina.samorek@gmail.com" target="_blank" rel="noreferrer">
+							  <img class="icon" src="/assets/icons/mail.svg" alt="icon"/>
+							  karolina.samorek@gmail.com
+							</a>
+						  </div>
+						</li> -->
+						<li>
+							<div class="contact-link">
+							  <a href="https://bit.ly/3dR28Wl" target="_blank" rel="noreferrer">
+								<img class="icon" src="/assets/icons/linkedin.svg" alt="icon"/>@karolina.samorek
+							  </a>
+							</div>
+						  </li>
 					  </ul>
 					<aside class="notes" data-markdown>
+						My name is Karolina Samorek
+						and I'm a Senior iOS Developer at Lake.
+
+						<!-- At Lake we build user experience with beautiful design. -->
+						
+						Since I started iOS development, every time I was working on UI, 
+						I had mixed feelings.
+						
+						From one side I really like to work on beautiful things. 
+						Being able to interact with something I developed. 
+						It just gives me this certain level of satisfaction. 
+
+						However it wasn't always delightful. 
+						I struggled with creating same things over and over again. 
+						With edge cases, like different screen sizes or waiting long to see results due to compilation time.
+						It was frustrating.
+
+						<!-- And it isn't optimal only for me. Also business suffers, because
+						is product is not developed as fast as it could be.
+						Not to mention money lost. -->
+
+						So, during this presentation I'm will show you what works for me 
+						to limit those frustrations
+						and embrace building UI.
+
+						✋✋✋🚰
+					</aside>
+				</section>
+<!-- DEVELOPMENT PERFORMANCE -->
+				<section data-markdown>
+					<script type="text/template">
+						## Shorten the waiting time <!-- .element: class="gradient-text" -->
+						* hot reloading
+						* Xcode previews
+						* modulated codebase
+						Note:
+						First thing you can do is shorten the time since making a change to seeing the result.
+						Ideally, find a way to see results immediately. 
+						* you can do it by introducing hot reloading 
+						<!-- which Marcin covered in his blogpost: ...  -->
+						* or working with multiple Xcode previews. Which is awesome for me, because it let me
+						see results on multiple devices at once.
+						* You can also modularize codebase and build just a small portion of it every time you change something. 
+						
+						Those changes might require investing some time up front,
+						
+						but it pays off very quickly. 
+
+						✋✋✋🚰
+					</script>
+				</section>
+<!-- EDGE CASES - SIZE VARIANTS -->
+				<section data-auto-animate>
+					<h2 class="gradient-text">Handle edge cases</h2>
+					<img class="iphone-ipad-image" src="/assets/small_large.png" alt="iPhone SE 1st gen vs iPad Pro 12.9 size comparation"/>
+					<aside class="notes" data-markdown>
+						If it comes to edge cases. 
+
+						Many of them are just related to trying to build UI for variety of screen sizes. 
+						
+						Sometimes it's just not physically possible to fit same content in all of them.
+						Like for example on the smallest iPhone and the biggest iPad.
+						<!-- Look how big is the difference. -->
+						
+						Another times, to look more friendly for the user, the content has to be constructed differently depending on the screen size. 
+						
+						Each of this exception is an if in the code. 
+						
+						It just doesn't feel right.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>Handle edge cases</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|1|3|5-9|11-14">
+							let screenInsets = SizeVariants<CGFloat>(small: 12, compact: 16, regular: 24)
+
+							let bannerRatio = SizeVariants<CGFloat>(compact: 180.0 / 348.0, regular: 200.0 / 500.0)
+
+							let header1 = SizeVariants<DSFont>(
+								compact: headers.withSize(32),
+								regular: headers.withSize(48)
+							)
+							private let headers = DSFont.systemFont(ofSize: 22, weight: .bold)
+
+							let image = SizeVariants<DSImage>(
+								compact: DSImage(named: "background.compact"),
+								regular: DSImage(named: "background.regular")
+							)
+							</code>
+					</pre>
+					<aside class="notes" data-markdown>
+						To simplify things at Lake we created something called `SizeVariants`. 
+						
+						You can thing about them as an extended size classes that let you declare rules for each screen size.
+						
+						And this rule is then applied to the layout. 
+						
+						We use `SizeVariants` to define things such us,
+						
+						* ⏭ insets,
+						* ⏭ ratio of UI elements, 
+						* ⏭ fonts 
+						* ⏭ or even different image assets.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>Handle edge cases</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="3-12|9-10|11-12|7-8|5-6|3-4|14-32">
+							/// Defines a way layout is constructed for different screen sizes.
+							public struct SizeVariants<Variant> {
+								/// The Variant for iPhones 4".
+								public var small: Variant
+								/// The Variant for iPhone 4.7".
+								public var short: Variant
+								/// The Variant for the iPhones wider than iPhone 4.7".
+								public var compact: Variant
+								/// The Variant for all iPads in portrait orientation.
+								public var regular: Variant
+								/// The Variant for all iPads in landscape orientation.
+								public var wide: Variant
+
+								/// Create SizeVariants.
+								/// - Parameters:
+								///   - small: The Variant for iPhones 4". 
+								///     If not provided `short` is used.
+								///   - short: The Variant for iPhone 4.7".
+								///     If not provided `compact` is used.
+								///   - compact: The Variant for the iPhones wider than iPhone 4.7". 
+								///     If not provided `regular` is used.
+								///   - regular: The Variant for all iPads in portrait. 
+								///     Used as a final fallback for each variant if not provided.
+								///   - wide: The Variant for all iPads in landscape. 
+								///     If not provided `regular` is used.
+								public init(small: Variant? = nil, short: Variant? = nil, compact: Variant? = nil, regular: Variant, wide: Variant? = nil) {
+									self.small = small ?? short ?? compact ?? regular
+									self.short = short ?? compact ?? regular
+									self.compact = compact ?? regular
+									self.regular = regular
+									self.wide = wide ?? regular
+								}
+							}
+						</code>
+					</pre>
+					<aside class="notes" data-markdown>
+						`SizeVariants` is simple generic struct.
+						
+						It should define variants in a way that fits to the product you are building.
+						
+						For example, Lake is iPad-first app
+						
+						⏭ and we use regular as default variant. It handles all iPads in portrait orientation (excluding split view ofc).
+						
+						⏭ In our case it's common that iPads in landscape orientation have it's dedicated layout,
+						so we have a variant called wide.
+						
+						⏭ Compact is basically iPhone in Portrait (as we don't support landscape for iPhone in our app).
+						To support edge cases for smaller iPhones we introduced
+						
+						⏭ short which handles iPhones with screen smaller than 4.7 inches.
+
+						⏭ And small for the smallest iPhones with 4 inches screen size.
+						
+						⏭ You can see that variant, if not defined, fallbacks to larger one.
+						
+						And at the end to regular, which has to be always provided.
+
+						✋✋✋🚰
+					</aside>
+				</section>
+<!-- DEFINING DESIGN SYSTEM -->
+				<section data-auto-animate data-markdown>
+					<script type="text/template">
+						### Eliminate repetitive work <!-- .element: class="gradient-text" -->
+						
+						Notes:
+						The best way I know to eliminate repetitive UI work
+					</script>
+				</section>
+				<section data-auto-animate data-markdown>
+					<script type="text/template">
+						### Eliminate repetitive work <!-- .element: class="gradient-text" -->
+						#### by
+						#### adopting
+						
+						Notes:
+						is to adopt
+					</script>
+				</section>
+				<section data-auto-animate data-markdown>
+					<script type="text/template">
+						### Eliminate repetitive work <!-- .element: class="gradient-text" -->
+						#### by
+						#### adopting
+						## The Design System <!-- .element: class="gradient-text" -->
+						
+						Notes:
+						the Design System.
+						
+						Simply create a framework that will let you build UI from reusable components
+						
+						just like playing LEGO bricks.
+
+						✋
+					</script>
+				</section>
+				<section data-auto-animate data-markdown>
+					<script type="text/template">
+						## The Design System <!-- .element: class="gradient-text" -->
+						
+						Notes:
+						There are many ways to create a Design System, 
+
+						however there is one significant thing I've learned over the years.
+						
+						The Design System, is a product itself, just like apps we work on.
+
+						And this product should be designed
+						
+						having best interest of it's users
+						
+						in mind.
+					</script>
+				</section>
+				<section data-auto-animate data-markdown>
+					<script type="text/template">
+						## The Design System <!-- .element: class="gradient-text" -->
+						<!-- TODO: ADD GRAPHIC -->
+						* Designers
+						* UX Researchers
+						* Product Owners
+						* Developers
+						Notes:
+						And by Users I mean 
+						* Designers
+						* UX Researchers
+						* Product Owners
+						* and us, Developers
+
+						To get maximum out of The Design System
+						each of those groups has to be involved in the process of creating it.
+
+						✋✋✋
+					</script>
+				</section>
+				<section>
+					<h2>Tokens</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="2-13|16-20, 24-25, 27-28">
+							/// All DesignSystem Tokens namespace.
+							public enum DSTokens {
+								/// All DesignSystem Fonts namespace.
+								public enum Fonts {}
+								/// All DesignSystem Colors namespace.
+								public enum Colors {}
+								/// All DesignSystem Icons namespace.
+								public enum Icons {}
+								/// All DesignSystem Spaces namespace.
+								public enum Spaces {}
+								
+								// ..
+							}
+
+							extension DSTokens.Colors {
+								/// Background/Primary color
+								public static let backgroundPrimary = DSColor(
+									light: CGColor.from(hex: "#F5F5F5")!,
+									dark: CGColor.from(hex: "#222222")!
+								)
+								
+								// ...
+								
+								/// Text/OnColor color
+								public static let textOnColor = DSColor(CGColor.from(hex: "#FAFAFA")!)
+
+								/// Accent/Primary/Default
+								public static let accentPrimaryDefault = DSColor(CGColor.from(hex: "#AA49DB")!)
+								
+								// ...
+							}
+
+						</code>
+					</pre>
+					
+					<aside class="notes" data-markdown>
+						You can start from defining tokens, which are parameters you can use to describe components.
+						
+						Like Fonts, Colors, Icons, Spaces etc.
+
+						<!-- POZMIENIAC -->
+						If you already support `UIKit` and `SwiftUI`, or you are thinking about transitioning into `SwiftUI`.
+						Having tokens defined in a way that let both frameworks to use them, might save you later on.
+
+						You might use `UIKit` types and convert them to `SwiftUI` ones, or the opposite. 
+						You could also create your own types.
+						
+						⏭ Like here, where we have our own type `Design System Color` which uses `CGColor` from `CoreGraphics` library.
+						So this type is independent from `UIKit`, but can be easily used with it
+						as well as with `SwiftUI`.
+						✋
+					</aside>
+				</section>
+				<section>
+					<h2>Control states</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|5-7|8-10|11-13">
+							/// State of UI control.
+							///
+							/// Possible options: ``normal``, ``highlighted`` and ``disabled``.
+							public struct ControlState: OptionSet, Hashable {
+								/// Normal UI control's state.
+								/// Applicable when no user action is being performed and control is enabled.
+								public static let normal = ControlState(rawValue: 1)
+								/// Highlighted UI control's state.
+								/// Applicable when user taps/presses and control is enabled.
+								public static let highlighted = ControlState(rawValue: 2)
+								/// Disabled UI control's state.
+								/// Applicable when control isn't enabled.
+								public static let disabled = ControlState(rawValue: 4)
+
+								// ...
+							}
+						</code>
+					</pre>
+					<aside class="notes" data-markdown>
+						Then think about all possible states you want your controls to have.
+
+						* ⏭ For example the normal state, when no user action is being performed.
+						* ⏭ highlighted, when user taps or press the control
+						* ⏭ and disabled, when no user interaction is possible.
+
+						✋
+					</aside>
+				</section>
+				<section data-markdown data-auto-animate>
+					<script type="text/template">
+						## Style Components <!-- .element: class="gradient-text" -->
+
+						Note:
+						By combining `Tokens`, `ControlStates` and `SizeVariants` together 
+						
+						you can define styles of your components. 
+					</script>
+				</section>
+				<section data-auto-animate>
+					<h2>Style Components</h2>
+					<div style="margin-left: 1rem;">
+						<img src="./assets/button-animation.gif" />
+					</div>
+					<aside class="notes" data-markdown>
+						Let's follow an example of styling Call To Action Button like this one.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>Style Components</h2>
+					<div style="margin-left: 1rem;">
+						<img src="./assets/button-animation.gif" />
+					</div>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="2-3|7-8|14-25|26-35">
+							extension DSTokens.Fonts {	
+								static let button = SizeVariants<DSFont>(regular: buttons)
+								private static let buttons = DSFont.systemFont(ofSize: 17, weight: .medium)
+							}
+
+							extension DSStyles.Texts {
+								public static let button = DSTokens.Fonts.button
+									.toTextAttributes(color: DSTokens.Colors.textOnColor)
+							}
+
+							extension DSStyles.Buttons {
+								public static let ctaPrimary = DSStyles.Texts.button
+									.toButtonAttributes(
+										stateViewAttributes: SizeVariants(
+											regular: [
+												.normal: .init(
+													backgroundColor: DSTokens.Colors.accentPrimaryDefault,
+													cornerRadius: DSTokens.CornerRadiuses.l
+												),
+												.highlighted: .init(
+													backgroundColor: DSTokens.Colors.accentPrimaryHighlighted,
+													cornerRadius: DSTokens.CornerRadiuses.s
+												)
+											]
+										),
+										contentInsets: SizeVariants<LayoutEdgeInsets>(
+											compact: [
+												.horizontal: DSTokens.Spaces.s, 
+												.vertical: DSTokens.Spaces.xs
+											],
+											regular: [
+												.horizontal: DSTokens.Spaces.m, 
+												.vertical: DSTokens.Spaces.s
+											]
+										)
+									)
+							}
+						</code>
+					</pre>
+					<aside class="notes" data-markdown>
+						* first we define font for a button
+						* ⏭ later we use it to create a text style, with specific text color
+						* ⏭ and at the end we apply attributes for control states, such us background color and corner radius
+						* ⏭ and then, provide different content insets.
+					</aside>
+				</section>
+<!-- Components Attributes -->
+				<section>
+					<h2>Components Attributes</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|3-4|6-7|11-17">
+							/// UI Attributes that can be applied on a button to change it visually.
+							public struct ButtonAttributes: Equatable, Hashable {
+								/// Button's content insets.
+								public var contentInsets: LayoutEdgeInsets
+
+								/// Attributes assigned to certain button ``ControlState``.
+								public var stateAttributes: [ControlState: StateAttributes]
+
+								// ...
+
+								/// Chunk of ``ButtonAttributes`` that is assigned to certain ``ControlState``.
+								public struct StateAttributes: Equatable, Hashable {
+									public var viewAttributes: ViewAttributes
+									public var textAttributes: TextAttributes
+
+									// ...
+								}
+							}
+						</code>
+					</pre>
+					<aside class="notes" data-markdown>
+						For better understanding, let's take a look on attributes that define style of a component.
+						<!-- TODO -->
+					</aside>
+				</section>
+				<section>
+					<h2>Components Attributes</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers>
+							/// UI Attributes that can be applied on a view to change it visually.
+							public struct ViewAttributes: Equatable, Hashable {
+								/// View's Background Color. Wont't be set if ``nil``.
+								public var backgroundColor: DSColor?
+								/// View's Tint Color. Wont't be set if ``nil``.
+								public var tintColor: DSColor?
+								/// Attributes applied to view's border. Wont't be set if ``nil``.
+								public var borderAttributes: BorderAttributes?
+								/// View's corner radius. Wont't be set if ``nil``.
+								public var cornerRadius: CGFloat?
+								/// Attributes related to view's shadow. Wont't be set if ``nil``.
+								public var shadowAttributes: ShadowAttributes?
+
+								// ...
+							}
+						</code>
+					</pre>
+					<aside class="notes" data-markdown>
+						<!-- TODO -->
+					</aside>
+				</section>
+				<section>
+					<h2>Components Attributes</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers>
+							/// UI Attributes that can be applied on a text to change it visually.
+							public struct TextAttributes: Equatable, Hashable {
+								/// Text Font.
+								public var font: DSFont
+								/// Text Font.
+								public var color: DSColor
+								/// Text Alignment. Wont't be set if ``nil``.
+								public var alignment: TextAlignment?
+								/// Text Line Spacing. Wont't be set if ``nil``.
+								public var lineSpacing: CGFloat?
+
+								// ...
+							}
+						</code>
+					</pre>
+					<aside class="notes" data-markdown>
+						<!-- TODO -->
+					</aside>
+				</section>
+<!-- DEMO -->				
+				<section data-markdown>
+					<script type="text/template">
+						## SwiftUI Demo <!-- .element: class="gradient-text" -->
+					</script>
+					<aside class="notes" data-markdown>
+						Let me now show you how easy it is to apply this kind of styles to `SwiftUI` view.
+					</aside>
+				</section>
+				<section>
+					<!-- DISPLAY THE DESIGNS -->
+					<aside class="notes" data-markdown>
+						Imagine we have to create a banner for WWDC Community Event.
+						It should look like this.
+					</aside>
+				</section>
+				<section>
+					<video data-autoplay src="./assets/test-video.mov" />
+					<aside class="notes" data-markdown>
+						To not start it completely from scratch. I've prepared a mockup view and during this demo we gonna just style it.
+					</aside>
+				</section>
+<!-- ENDING -->
+				<section data-markdown>
+					<script type="text/template">
+						# Thank You <!-- .element: class="gradient-text" -->
+					</script>
+					<aside class="notes" data-markdown>
+						Thank you all for being here today. I hope you find this presentation useful.
 					</aside>
 				</section>
 				<section data-markdown>
 					<script type="text/template">
-						## What tools Apple give us? <!-- .element: class="gradient-text" -->
-						Note:
-						* UIKit and size classes. 
+						# Questions <!-- .element: class="gradient-text" -->
+					</script>
+					<aside class="notes" data-markdown>
+						If you have any questions, now is the time :)
 					</aside>
+				</section>
+				<section data-markdown>
+					<script type="text/template">
+						## Links <!-- .element: class="gradient-text" -->
+					</script>
 				</section>
 			</div>
 		</div>
@@ -89,7 +612,9 @@
 			// - https://revealjs.com/config/
 			Reveal.initialize({
 				hash: true,
-
+				width: 1920,
+  				height: 1080,
+				totalTime: 1800,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});

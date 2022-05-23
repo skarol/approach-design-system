@@ -9,6 +9,7 @@
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    padding-bottom: 2rem;
 }
 
 .contact-header > * {
@@ -60,13 +61,13 @@
     padding-right: 2rem;
 }
 
-.contact-link ul, li {
-    list-style: none;
-}
-
 .icon {
     filter: brightness(0.6);
     transition: filter .2s;
     width: 2rem;
     height: 2rem;
+}
+
+.iphone-ipad-image {
+    width: 50%;
 }
