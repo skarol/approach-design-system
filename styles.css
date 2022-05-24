@@ -71,3 +71,8 @@
 .iphone-ipad-image {
     width: 50%;
 }
+
+.demo-video {
+    width: 60%;
+    max-width: 1100px;
+}

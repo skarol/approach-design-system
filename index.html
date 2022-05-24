@@ -82,16 +82,16 @@
 						Being able to interact with something I developed. 
 						It just gives me this certain level of satisfaction. 
 
-						However it wasn't always delightful. 
+						However it wasn't always like that. 
 						I struggled with creating same things over and over again. 
 						With edge cases, like different screen sizes or waiting long to see results due to compilation time.
-						It was frustrating.
+						It was frustrating experience.
 
 						<!-- And it isn't optimal only for me. Also business suffers, because
 						is product is not developed as fast as it could be.
 						Not to mention money lost. -->
 
-						So, during this presentation I'm will show you what works for me 
+						So, during this talk I'm will show you what works for me 
 						to limit those frustrations
 						and embrace building UI.
 
@@ -136,18 +136,20 @@
 						
 						Another times, to look more friendly for the user, the content has to be constructed differently depending on the screen size. 
 						
-						Each of this exception is an if in the code. 
-						
-						It just doesn't feel right.
+						Each of this exception is basically an if in the code. 
 					</aside>
 				</section>
 				<section data-auto-animate>
 					<h2>Handle edge cases</h2>
 					<pre>
-						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|1|3|5-9|11-14">
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|1|3-6|8-12|14-17">
+							<script type="text/template">
 							let screenInsets = SizeVariants<CGFloat>(small: 12, compact: 16, regular: 24)
 
-							let bannerRatio = SizeVariants<CGFloat>(compact: 180.0 / 348.0, regular: 200.0 / 500.0)
+							let bannerRatio = SizeVariants<CGFloat>(
+								compact: 180.0 / 348.0, 
+								regular: 200.0 / 500.0
+							)
 
 							let header1 = SizeVariants<DSFont>(
 								compact: headers.withSize(32),
@@ -159,14 +161,15 @@
 								compact: DSImage(named: "background.compact"),
 								regular: DSImage(named: "background.regular")
 							)
+							</script>
 							</code>
 					</pre>
 					<aside class="notes" data-markdown>
-						To simplify things at Lake we created something called `SizeVariants`. 
+						To simplify things at Lake we created `SizeVariants`. 
 						
 						You can thing about them as an extended size classes that let you declare rules for each screen size.
-						
-						And this rule is then applied to the layout. 
+
+						Instead of making exceptions we describe the behavior for each variant.
 						
 						We use `SizeVariants` to define things such us,
 						
@@ -179,7 +182,8 @@
 				<section data-auto-animate>
 					<h2>Handle edge cases</h2>
 					<pre>
-						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="3-12|9-10|11-12|7-8|5-6|3-4|14-32">
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="3-12|9-10|11-12|7-8|5-6|3-4|26-38">
+							<script type="text/template">
 							/// Defines a way layout is constructed for different screen sizes.
 							public struct SizeVariants<Variant> {
 								/// The Variant for iPhones 4".
@@ -205,7 +209,13 @@
 								///     Used as a final fallback for each variant if not provided.
 								///   - wide: The Variant for all iPads in landscape. 
 								///     If not provided `regular` is used.
-								public init(small: Variant? = nil, short: Variant? = nil, compact: Variant? = nil, regular: Variant, wide: Variant? = nil) {
+								public init(
+									small: Variant? = nil, 
+									short: Variant? = nil, 
+									compact: Variant? = nil, 
+									regular: Variant, 
+									wide: Variant? = nil
+								) {
 									self.small = small ?? short ?? compact ?? regular
 									self.short = short ?? compact ?? regular
 									self.compact = compact ?? regular
@@ -213,6 +223,7 @@
 									self.wide = wide ?? regular
 								}
 							}
+						</script>
 						</code>
 					</pre>
 					<aside class="notes" data-markdown>
@@ -361,8 +372,8 @@
 						Like Fonts, Colors, Icons, Spaces etc.
 
 						<!-- POZMIENIAC -->
-						If you already support `UIKit` and `SwiftUI`, or you are thinking about transitioning into `SwiftUI`.
-						Having tokens defined in a way that let both frameworks to use them, might save you later on.
+						If you already support `UIKit` and `SwiftUI`, or you are thinking about transitioning into `SwiftUI`
+						define your tokens in a way you will be able to use them with both frameworks.
 
 						You might use `UIKit` types and convert them to `SwiftUI` ones, or the opposite. 
 						You could also create your own types.
@@ -370,6 +381,7 @@
 						⏭ Like here, where we have our own type `Design System Color` which uses `CGColor` from `CoreGraphics` library.
 						So this type is independent from `UIKit`, but can be easily used with it
 						as well as with `SwiftUI`.
+						
 						✋
 					</aside>
 				</section>
@@ -431,6 +443,7 @@
 					</div>
 					<pre>
 						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="2-3|7-8|14-25|26-35">
+							<script type="text/template">
 							extension DSTokens.Fonts {	
 								static let button = SizeVariants<DSFont>(regular: buttons)
 								private static let buttons = DSFont.systemFont(ofSize: 17, weight: .medium)
@@ -468,45 +481,19 @@
 										)
 									)
 							}
+						</script>
 						</code>
 					</pre>
 					<aside class="notes" data-markdown>
 						* first we define font for a button
 						* ⏭ later we use it to create a text style, with specific text color
-						* ⏭ and at the end we apply attributes for control states, such us background color and corner radius
-						* ⏭ and then, provide different content insets.
+						* ⏭ and then we apply attributes for control states, such us background color and corner radius
+						* ⏭ and at the end, we provide different content insets.
+
+						✋
 					</aside>
 				</section>
-<!-- Components Attributes -->
-				<section>
-					<h2>Components Attributes</h2>
-					<pre>
-						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|3-4|6-7|11-17">
-							/// UI Attributes that can be applied on a button to change it visually.
-							public struct ButtonAttributes: Equatable, Hashable {
-								/// Button's content insets.
-								public var contentInsets: LayoutEdgeInsets
-
-								/// Attributes assigned to certain button ``ControlState``.
-								public var stateAttributes: [ControlState: StateAttributes]
-
-								// ...
-
-								/// Chunk of ``ButtonAttributes`` that is assigned to certain ``ControlState``.
-								public struct StateAttributes: Equatable, Hashable {
-									public var viewAttributes: ViewAttributes
-									public var textAttributes: TextAttributes
-
-									// ...
-								}
-							}
-						</code>
-					</pre>
-					<aside class="notes" data-markdown>
-						For better understanding, let's take a look on attributes that define style of a component.
-						<!-- TODO -->
-					</aside>
-				</section>
+<!-- Attributes -->
 				<section>
 					<h2>Components Attributes</h2>
 					<pre>
@@ -529,74 +516,421 @@
 						</code>
 					</pre>
 					<aside class="notes" data-markdown>
-						<!-- TODO -->
+						For better understanding, let's take a look on attributes that define style of a component.
+						This is just an example of possible parameters for a view component. 
+						The properties that describe a component can be different depending on your Design System.
 					</aside>
 				</section>
-				<section>
-					<h2>Components Attributes</h2>
-					<pre>
-						<code class="language-swift hljs" data-trim data-noescape data-line-numbers>
-							/// UI Attributes that can be applied on a text to change it visually.
-							public struct TextAttributes: Equatable, Hashable {
-								/// Text Font.
-								public var font: DSFont
-								/// Text Font.
-								public var color: DSColor
-								/// Text Alignment. Wont't be set if ``nil``.
-								public var alignment: TextAlignment?
-								/// Text Line Spacing. Wont't be set if ``nil``.
-								public var lineSpacing: CGFloat?
+				<section data-markdown>
+					<script type="text/template">
+						## Applying attributes to a Button
+						```swift []
+						/// Design System Button Style.
+						///
+						/// Applies ``ButtonAttributes`` to a button.
+						public struct DSButtonStyle: ButtonStyle {
+							public let attributes: ButtonAttributes
 
-								// ...
+							public init(attributes: ButtonAttributes) {
+								self.attributes = attributes
 							}
+
+							/// Creates a view that represents the body of a button.
+							///
+							/// The system calls this method for each ```Button``` instance in a view
+							/// hierarchy where this style is the current button style.
+							///
+							/// - Parameter configuration : The properties of the button.
+							public func makeBody(configuration: Configuration) -> some View {
+								let currentState: ControlState = configuration.isPressed ? .highlighted : .normal
+								let currentStateAttributes = attributes.stateAttributes[currentState] ?? attributes.stateAttributes[.normal]
+								configuration.label
+									.apply(textAttributes: currentStateAttributes?.textAttributes)
+									.padding(attributes.contentInsets)
+									.apply(viewAttributes: currentStateAttributes?.viewAttributes)
+									.animation(.default, value: configuration.isPressed)
+							}
+						}
+						```
+						Note:
+						To apply attributes to a component create set of methods and types.
+						
+						Like for `Button` in `SwiftUI` where you can implement a struct conforming a `ButtonStyle`. 
+					</script>
+				</section>
+				<section data-markdown>
+					<script type="text/template">
+						## Applying attributes to a Text
+						```swift []
+						/// Applies ``TextAttributes`` for given view.
+						///
+						/// - Parameters:
+						///   - attributes: The ``TextAttributes`` to apply.
+						/// - Returns: Modified View.
+						@ViewBuilder func apply(textAttributes: TextAttributes) -> some View {
+							self.if(textAttributes.lineSpacing) { view, lineSpacing in
+								view.lineSpacing(lineSpacing)
+							}
+							.font(Font(textAttributes.font))
+							.foregroundColor(Color(dsColor: textAttributes.color))
+							.if(textAttributes.alignment) { view, alignment in
+								view.multilineTextAlignment(alignment)
+							}
+						}
+						```
+						Note:
+						Because there is no such thing like `TextStyle` in `SwiftUI` ,
+						`TextAttributes` are applied by a function.
+
+						✋
+					</script>
+				</section>
+				<section data-markdown>
+					<script type="text/template">
+						## Applying attributes to a View
+						```swift []
+						/// Applies View Attributes for given view.
+						/// - Parameter attributes: The View Attributes to apply on a view.
+						public func apply(attributes: ViewAttributes) {
+							if let backgroundColor = attributes.backgroundColor {
+								self.backgroundColor = UIColor(dsColor: backgroundColor)
+							}
+							if let tintColor = attributes.tintColor {
+								self.tintColor = UIColor(dsColor: tintColor)
+							}
+							layer.cornerRadius = attributes.cornerRadius ?? .zero
+							if let shadowAttributes = attributes.shadowAttributes {
+								apply(attributes: shadowAttributes)
+							}
+							if let borderAttributes = attributes.borderAttributes {
+								apply(attributes: borderAttributes)
+							}
+						}
+						```
+						Note:
+						In `UIKit` we can use same attributes, however we have to write separate functions applying styles.
+
+						✋
+
+						There are many more helpers like the ones I've shown.
+						
+						The thing is, you create them once and use them later on, so there is no sense for me 
+						to go though them on this talk.
+						
+						If you are interested there is an repository on my github, where you can get more details.
+						I'll link to it at the end of my presentation.
+
+						✋✋✋🚰
+					</script>
+				</section>
+<!-- DEMO -->				
+				<section data-auto-animate>
+					<h2 class="gradient-text">Feature level of Styles</h2>
+					<aside class="notes" data-markdown>
+						Before I've shown styling a Call To Action Button.
+						The style was defined on the Design System level.
+						
+						However, we can also take advantage of them on a feature level.
+
+						Imagine we have to create a banner for WWDC Community Event.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2 class="gradient-text">Feature level of Styles</h2>
+					<img src="./assets/wwdc_banner_design.png" alt="example design" />
+					<aside class="notes" data-markdown>
+						It should look like this.
+						
+						Nothing super fancy, but it's slightly different on each device.
+						
+						✋✋✋🚰
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>Feature level of Styles</h2>
+					<pre>
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|2-3">
+							<script type="text/template">
+							enum WWDCBannerStyle {
+								static let container = DSStyles.Shadows.banner
+									.toViewAttributes(cornerRadius: DSTokens.CornerRadiuses.l)
+							
+								static let header = DSStyles.Texts.header2onColor
+								static let body = DSStyles.Texts.bodyOnColor
+								static let button = DSStyles.Buttons.primaryCTA
+
+								static let bannerRatio = SizeVariants<CGFloat>(
+									compact: 230.0 / 348.0, 
+									regular: 200.0 / 500.0
+								)
+								static let backgroundImage = DSStyles.Shadows.banner
+									.toViewAttributes(cornerRadius: DSTokens.CornerRadiuses.l)
+									.toImageAttributes(image: .init(
+										compact: DSImage(named: "background.compact"),
+										regular: DSImage(named: "background.regular")
+									))
+							}
+							</script>
 						</code>
 					</pre>
 					<aside class="notes" data-markdown>
-						<!-- TODO -->
+						We can start from defining feature styles, by reusing the Design System.
+						
+						⏭ Like taking already defined shadow and converting it to `ViewAttributes` with specific corner radius.
+
+						<!-- Those styles can be used lated on with `UIKit` or `SwiftUI`. -->
 					</aside>
 				</section>
-<!-- DEMO -->				
-				<section data-markdown>
-					<script type="text/template">
-						## SwiftUI Demo <!-- .element: class="gradient-text" -->
-					</script>
+				<section data-auto-animate>
+					<h2>SwiftUI</h2>
+					<div class="r-hstack">
+						<img src="./assets/swiftUI/01.png" />
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="4-16|6-9">
+								struct WWDCBannerView: View {
+									@EnvironmentObject var layout: Layout
+								
+									var body: some View {
+										Image(
+											SizeVariants(
+												compact: "background.compact",
+												regular: "background.regular"
+											).for(screen: layout.screen)
+										)
+										.resizable()
+										.aspectRatio(contentMode: .fit)
+										.frame(maxWidth: 500)
+										.padding(DSTokens.Spaces.l)
+									}
+								}
+							</code>
+						</pre>
+					</div>
 					<aside class="notes" data-markdown>
-						Let me now show you how easy it is to apply this kind of styles to `SwiftUI` view.
+						Having styles defined we can start building UI. Here we have just a background of the banner.
+
+						⏭  We already provide asset as a `SizeVariant`.
+						
+						We could take advantage of Xcode assets and instead of universal define iPhone and iPad separately.
+						However split view would then look really bad.
 					</aside>
 				</section>
-				<section>
-					<!-- DISPLAY THE DESIGNS -->
+				<section data-auto-animate>
+					<h2>SwiftUI</h2>
+					<div class="r-hstack">
+						<img src="./assets/swiftUI/02.png" />
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="12-14">
+								struct WWDCBannerView: View {
+									@EnvironmentObject var layout: Layout
+								
+									var body: some View {
+										Image(
+											SizeVariants(
+												compact: "background.compact",
+												regular: "background.regular"
+											).for(screen: layout.screen)
+										)
+										.resizable()
+										.apply(viewAttributes: WWDCBannerStyle.container.for(
+											screen: layout.screen
+										))
+										.aspectRatio(contentMode: .fit)
+										.frame(maxWidth: 500)
+										.padding(DSTokens.Spaces.l)
+									}
+								}
+							</code>
+						</pre>
+					</div>
 					<aside class="notes" data-markdown>
-						Imagine we have to create a banner for WWDC Community Event.
-						It should look like this.
+						Buy simply adding one function call we restyle the background, to have rounded corners and shadow below.
 					</aside>
 				</section>
-				<section>
-					<video data-autoplay src="./assets/test-video.mov" />
+				<section data-auto-animate>
+					<h2>SwiftUI</h2>
+					<div class="r-hstack">
+						<img src="./assets/swiftUI/02.png" />
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="20-31">
+								struct WWDCBannerView: View {
+									@EnvironmentObject var layout: Layout
+								
+									var body: some View {
+										Image(
+											SizeVariants(
+												compact: "background.compact",
+												regular: "background.regular"
+											).for(screen: layout.screen)
+										)
+										.resizable()
+										.apply(viewAttributes: WWDCBannerStyle.container.for(
+											screen: layout.screen
+										))
+										.aspectRatio(contentMode: .fit)
+										.frame(maxWidth: 500)
+										.padding(DSTokens.Spaces.l)
+									}
+
+									@ViewBuilder private var foreground: some View {
+										HStack {
+											Spacer()
+											VStack(alignment: .trailing, spacing: DSTokens.Spaces.s) {
+												Text("WWDC22")
+												Text("Community Event")
+												Spacer()
+												Button("Join Now") { /* ... */ }
+											}
+											.padding(DSTokens.Spaces.l)
+										}
+									}
+								}
+							</code>
+						</pre>
+					</div>
 					<aside class="notes" data-markdown>
-						To not start it completely from scratch. I've prepared a mockup view and during this demo we gonna just style it.
+						Now let see what we can do with the foreground. 
+						
+						Simple `VStack` with `Texts`, `Button` and `Spacer` in between should work.
+
+						Let's add it to our banner as an overlay.
 					</aside>
 				</section>
+				<section data-auto-animate>
+					<h2>SwiftUI</h2>
+					<div class="r-hstack">
+						<img src="./assets/swiftUI/03.png" />
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="16|21-32">
+								struct WWDCBannerView: View {
+									@EnvironmentObject var layout: Layout
+								
+									var body: some View {
+										Image(
+											SizeVariants(
+												compact: "background.compact",
+												regular: "background.regular"
+											).for(screen: layout.screen)
+										)
+										.resizable()
+										.apply(viewAttributes: WWDCBannerStyle.container.for(
+											screen: layout.screen
+										))
+										.aspectRatio(contentMode: .fit)
+										.overlay(foreground)
+										.frame(maxWidth: 500)
+										.padding(DSTokens.Spaces.l)
+									}
+
+									@ViewBuilder private var foreground: some View {
+										HStack {
+											Spacer()
+											VStack(alignment: .trailing, spacing: DSTokens.Spaces.s) {
+												Text("WWDC22")
+												Text("Community Event")
+												Spacer()
+												Button("Join Now") { /* ... */ }
+											}
+											.padding(DSTokens.Spaces.l)
+										}
+									}
+								}
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						Not bad. 
+						
+						However it doesn't look like on the design.
+
+						⏭ Let's style new components.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>SwiftUI</h2>
+					<div class="r-hstack">
+						<img src="./assets/swiftUI/04.png" />
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="26-28,30-32,35-37">
+								struct WWDCBannerView: View {
+									@EnvironmentObject var layout: Layout
+								
+									var body: some View {
+										Image(
+											SizeVariants(
+												compact: "background.compact",
+												regular: "background.regular"
+											).for(screen: layout.screen)
+										)
+										.resizable()
+										.apply(viewAttributes: WWDCBannerStyle.container.for(
+											screen: layout.screen
+										))
+										.aspectRatio(contentMode: .fit)
+										.overlay(foreground)
+										.frame(maxWidth: 500)
+										.padding(DSTokens.Spaces.l)
+									}
+
+									@ViewBuilder private var foreground: some View {
+										HStack {
+											Spacer()
+											VStack(alignment: .trailing, spacing: DSTokens.Spaces.s) {
+												Text("WWDC22")
+													.apply(textAttributes: WWDCBannerStyle.header.for(
+														screen: layout.screen
+													))
+												Text("Community Event")
+													.apply(textAttributes: WWDCBannerStyle.body.for(
+														screen: layout.screen
+													))
+												Spacer()
+												Button("Join Now") { /* ... */ }
+													.buttonStyle(DSButtonStyle(
+														attributes: WWDCBannerStyle.button.for(screen: layout.screen)
+													))
+											}
+											.padding(DSTokens.Spaces.l)
+										}
+									}
+								}
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						Agin, few lines of code and UI is transformed.
+
+						The best thing is that it does all the magic for edge cases.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>SwiftUI</h2>
+					<video class="demo-video" data-autoplay src="./assets/swiftUI/final.mov"></video>
+					<aside class="notes" data-markdown>
+						It looks good in
+						* portrait
+						* landscape
+						* and even in split view.
+
+						You can se that it
+					</aside>
+				</section>
+
 <!-- ENDING -->
 				<section data-markdown>
 					<script type="text/template">
 						# Thank You <!-- .element: class="gradient-text" -->
 					</script>
 					<aside class="notes" data-markdown>
-						Thank you all for being here today. I hope you find this presentation useful.
-					</aside>
-				</section>
-				<section data-markdown>
-					<script type="text/template">
-						# Questions <!-- .element: class="gradient-text" -->
-					</script>
-					<aside class="notes" data-markdown>
+						Thank you all for being here today.
+
 						If you have any questions, now is the time :)
 					</aside>
 				</section>
 				<section data-markdown>
 					<script type="text/template">
 						## Links <!-- .element: class="gradient-text" -->
+						<!-- TODO: add links -->
 					</script>
 				</section>
 			</div>
