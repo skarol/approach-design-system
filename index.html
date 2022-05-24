@@ -109,7 +109,6 @@
 						First thing you can do is shorten the time since making a change to seeing the result.
 						Ideally, find a way to see results immediately. 
 						* you can do it by introducing hot reloading 
-						<!-- which Marcin covered in his blogpost: ...  -->
 						* or working with multiple Xcode previews. Which is awesome for me, because it let me
 						see results on multiple devices at once.
 						* You can also modularize codebase and build just a small portion of it every time you change something. 
@@ -358,7 +357,7 @@
 								public static let textOnColor = DSColor(CGColor.from(hex: "#FAFAFA")!)
 
 								/// Accent/Primary/Default
-								public static let accentPrimaryDefault = DSColor(CGColor.from(hex: "#AA49DB")!)
+								public static let accentPrimaryDefault = DSColor(CGColor.from(hex: "#AA49D8")!)
 								
 								// ...
 							}
@@ -371,7 +370,6 @@
 						
 						Like Fonts, Colors, Icons, Spaces etc.
 
-						<!-- POZMIENIAC -->
 						If you already support `UIKit` and `SwiftUI`, or you are thinking about transitioning into `SwiftUI`
 						define your tokens in a way you will be able to use them with both frameworks.
 
@@ -531,10 +529,6 @@
 						public struct DSButtonStyle: ButtonStyle {
 							public let attributes: ButtonAttributes
 
-							public init(attributes: ButtonAttributes) {
-								self.attributes = attributes
-							}
-
 							/// Creates a view that represents the body of a button.
 							///
 							/// The system calls this method for each ```Button``` instance in a view
@@ -555,7 +549,7 @@
 						Note:
 						To apply attributes to a component create set of methods and types.
 						
-						Like for `Button` in `SwiftUI` where you can implement a struct conforming a `ButtonStyle`. 
+						Like for `Button` in `SwiftUI` where you can implement a struct conforming to `ButtonStyle`. 
 					</script>
 				</section>
 				<section data-markdown>
@@ -617,8 +611,7 @@
 						The thing is, you create them once and use them later on, so there is no sense for me 
 						to go though them on this talk.
 						
-						If you are interested there is an repository on my github, where you can get more details.
-						I'll link to it at the end of my presentation.
+						If you are interested there is an repository on my github, where you can find more details.
 
 						✋✋✋🚰
 					</script>
@@ -646,6 +639,7 @@
 						✋✋✋🚰
 					</aside>
 				</section>
+<!-- SwiftUI -->
 				<section data-auto-animate>
 					<h2>Feature level of Styles</h2>
 					<pre>
@@ -912,25 +906,262 @@
 						* landscape
 						* and even in split view.
 
-						You can se that it
+						You can see, by a banner ratio, that it uses smaller size variants for split view.
+
+						Building our example with `SwiftUI` was pretty straight forward. 
+						But what with UIKit?
 					</aside>
 				</section>
+<!-- UIKit -->
+				<section data-auto-animate>
+					<h2>UIKit</h2>
+					<div class="r-hstack">
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|3-5|11-18">
+								<script type="text/template">
+								/// Stores ``View`` and it's ``Attributes``.
+								@propertyWrapper public class LayoutView<View: AttributedView> {
+									public var wrappedValue: View
+									public let attributes: SizeVariants<View.Attributes>
+									public var projectedValue: LayoutView<View> { self }
 
+									private var cancellables: Set<AnyCancellable> = []
+
+									/// Observes ``Layout.screen`` and perform updates when it changes.
+									/// - Parameter layout: Layout observable object, to observe.
+									public func startObserving(layout: Layout) {
+										wrappedValue.startUpdating(
+											attributes: layout.$screen
+												.map(attributes.for(screen:))
+												.eraseToAnyPublisher(),
+											store: &cancellables
+										)
+									}
+								}
+								</script>
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						Let me introduce property wrapper that can be handy.
+
+						⏭ It stores view together with it's attributes.
+						⏭ But it is also able to observe layout and perform updates on screen change.
+					</aside>
+				</section>
+				<section data-auto-animate>
+					<h2>UIKit</h2>
+					<div class="r-hstack">
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers>
+								<script type="text/template">
+									/// View that can apply attributes on itself.
+									public protocol AttributedView: UIView {
+										associatedtype Attributes
+									
+										/// Starts updating stream of attributes on itself.
+										/// - Parameters:
+										///   - attributes: The stream of attributes to apply.
+										///   - cancellables: Cancellable Set to store updates on.
+										func startUpdating(attributes: AnyPublisher<Attributes, Never>, store cancellables: inout Set<AnyCancellable>)
+									}
+								</script>
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						Of course, if you want your view to be able to self update, 
+						you have to make it conform to `AttributedView`.
+					</aside>
+				</section>
+				<section data-auto-animate data-auto-animate-id="view-controller">
+					<h2>UIKit</h2>
+					<div class="r-hstack">
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers>
+								<script type="text/template">
+									final class WWDCBannerViewController: UIViewController {
+										var layout: Layout
+									
+										private var bannerContainer = DSView()
+									
+										private var backgroundImageView = UIImageView()
+									
+										private var headerLabel = UILabel()
+									
+										private var bodyLabel = UILabel()
+									
+										private var button = UIButton(type: .custom)
+
+										// ...
+
+										override func viewDidLoad() {
+											super.viewDidLoad()
+											// ...
+										}
+
+										// ...
+									}
+								</script>
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						Then having ViewController for our WWDC banner. Ale we need to do
+					</aside>
+				</section>
+				<section data-auto-animate data-auto-animate-id="view-controller">
+					<h2>UIKit</h2>
+					<div class="r-hstack">
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="4,7,10,13,16|23-27">
+								<script type="text/template">
+									final class WWDCBannerViewController: UIViewController {
+										var layout: Layout
+									
+										@LayoutView(attributes: WWDCBannerStyle.container)
+										private var bannerContainer = DSView()
+									
+										@LayoutView(attributes: WWDCBannerStyle.backgroundImage)
+										private var backgroundImageView = UIImageView()
+									
+										@LayoutView(attributes: WWDCBannerStyle.header)
+										private var headerLabel = UILabel()
+									
+										@LayoutView(attributes: WWDCBannerStyle.body)
+										private var bodyLabel = UILabel()
+									
+										@LayoutView(attributes: WWDCBannerStyle.button)
+										private var button = UIButton(type: .custom)
+
+										// ...
+
+										override func viewDidLoad() {
+											super.viewDidLoad()
+											$bannerContainer.startObserving(layout: layout)
+											$backgroundImageView.startObserving(layout: layout)
+											$headerLabel.startObserving(layout: layout)
+											$bodyLabel.startObserving(layout: layout)
+											$button.startObserving(layout: layout)
+											// ...
+										}
+
+										// ...
+									}
+								</script>
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						... is add property wrappers,
+
+						⏭ and start observing layout.
+
+						Well, almost. It's `UIKit` it cannot be to easy.
+
+						We have to take care about one more thing.
+					</aside>
+				</section>
+				<section>
+					<h2>UIKit</h2>
+					<div class="r-hstack">
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="1-17|18-27">
+								<script type="text/template">
+									/// Adds possibility to update for the Constraint when screen changes.
+									public class LayoutConstraint<Constraint, Value> {
+										private(set) public var constraint: Constraint
+										private(set) public var value: SizeVariants<Value>
+
+										var updateClosure: ((Constraint, Value) -> Void)?
+
+										// ...
+
+										/// Start observing screen and updates itself when screen changes.
+										/// - Parameter layout: The layout containing screen.
+										func startObserving(layout: Layout) {
+											layout.$screen.sink { [unowned self] screen in
+												self.updateClosure?(self.constraint, self.value.for(screen: screen))
+											}
+											.store(in: &cancellables)
+										}
+									}
+
+									extension Array where Element: LayoutConstraint<NSLayoutConstraint, CGFloat> {
+										/// Activates each constrain and start observing layout for screen changes.
+										/// - Parameter layout: The layout containing screen.
+										public func activateAndObserve(layout: Layout) {
+											forEach {
+												$0.constraint.isActive = true
+												$0.startObserving(layout: layout)
+											}
+										}
+									}
+								</script>
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						Constrains. 
+
+						So we would have a mechanism of refreshing them on screen change instead of doing so manually in every view or view controller.
+					</aside>
+				</section>
+				<section>
+					<h2>UIKit</h2>
+					<div class="r-hstack">
+						<pre data-id="code-animation">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="1-17|18-27">
+								<script type="text/template">
+									override func viewDidLoad() {
+										super.viewDidLoad()
+										let constrains = [
+											LayoutConstraint(
+												constraint: bannerContainer.heightAnchor.constraint(
+													equalTo: bannerContainer.widthAnchor,
+													multiplier: WWDCBannerStyle.bannerRatio.regular
+												),
+												multiplier: WWDCBannerStyle.bannerRatio
+											)
+										]
+
+										constrains.activateAndObserve(layout: layout)
+										
+										// ...
+									}
+								</script>
+							</code>
+						</pre>
+					</div>
+					<aside class="notes" data-markdown>
+						And using this in code is just a matter of declaring it and activate.
+					</aside>
+				</section>
+				<section>
+					<h2>UIKit</h2>
+					<video class="demo-video" data-autoplay src="./assets/uikit-swiftui.mov"></video>
+					<aside class="notes" data-markdown>
+						todo
+					</aside>
+				</section>
 <!-- ENDING -->
-				<section data-markdown>
+				<section data-markdown data-auto-animate>
 					<script type="text/template">
 						# Thank You <!-- .element: class="gradient-text" -->
-					</script>
-					<aside class="notes" data-markdown>
+						Notes:
 						Thank you all for being here today.
-
+						
 						If you have any questions, now is the time :)
-					</aside>
+					</script>
 				</section>
-				<section data-markdown>
+				<section data-markdown data-auto-animate data-visibility="hidden">
 					<script type="text/template">
-						## Links <!-- .element: class="gradient-text" -->
+						# Thank You <!-- .element: class="gradient-text" -->
+						<!-- ## Links -->
 						<!-- TODO: add links -->
+						
+						Notes:
+						So here is the set of links.
 					</script>
 				</section>
 			</div>
@@ -948,7 +1179,7 @@
 				hash: true,
 				width: 1920,
   				height: 1080,
-				totalTime: 1800,
+				totalTime: 1500,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
