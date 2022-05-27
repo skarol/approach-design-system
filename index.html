@@ -25,10 +25,12 @@
 					<aside class="notes" data-markdown>
 						Hello everyone.
 						
-						Today I will talk about a way of approaching Design System to make this experience as delightfully as possible.
+						Today I will talk about approaching Design System 
+						
+						and making this experience as delightfully as possible.
 					</aside>
 				</section>
-				<section class="contact">
+				<section class="contact" data-timing="90">
 					<div class="contact-header">	
 						<h3 class="gradient-text">Karolina Samorek</h3>
 						<h5>Senior iOS Developer 
@@ -80,16 +82,10 @@
 						
 						From one side I really like to work on beautiful things. 
 						Being able to interact with something I developed. 
-						It just gives me this certain level of satisfaction. 
 
 						However it wasn't always like that. 
 						I struggled with creating same things over and over again. 
 						With edge cases, like different screen sizes or waiting long to see results due to compilation time.
-						It was frustrating experience.
-
-						<!-- And it isn't optimal only for me. Also business suffers, because
-						is product is not developed as fast as it could be.
-						Not to mention money lost. -->
 
 						So, during this talk I'm will show you what works for me 
 						to limit those frustrations
@@ -105,17 +101,19 @@
 						* hot reloading
 						* Xcode previews
 						* modulated codebase
+						
 						Note:
-						First thing you can do is shorten the time since making a change to seeing the result.
-						Ideally, find a way to see results immediately. 
-						* you can do it by introducing hot reloading 
-						* or working with multiple Xcode previews. Which is awesome for me, because it let me
-						see results on multiple devices at once.
-						* You can also modularize codebase and build just a small portion of it every time you change something. 
+						First thing you can do to make your experience with UI more present,
+						is shorten the waiting time.
+
+						Yesterday Krzysztof had a great talk about it. 
 						
-						Those changes might require investing some time up front,
+						Hot reloading magic and so on.
 						
-						but it pays off very quickly. 
+						However I do have a comment on one thing. 
+						For me Xcode previews (if they work) are great. I can see a result on multiple devices at once.
+						But in order to make them work you have to have modularized codebase and build just a small portion of it
+						every time you change something.
 
 						✋✋✋🚰
 					</script>
@@ -123,7 +121,7 @@
 <!-- EDGE CASES - SIZE VARIANTS -->
 				<section data-auto-animate>
 					<h2 class="gradient-text">Handle edge cases</h2>
-					<img class="iphone-ipad-image" src="/assets/small_large.png" alt="iPhone SE 1st gen vs iPad Pro 12.9 size comparation"/>
+					<img class="iphone-ipad-image" src="/assets/small_large.png" alt="iPhone SE 1st gen vs iPad Pro 12.9 size comparition"/>
 					<aside class="notes" data-markdown>
 						If it comes to edge cases. 
 
@@ -131,9 +129,8 @@
 						
 						Sometimes it's just not physically possible to fit same content in all of them.
 						Like for example on the smallest iPhone and the biggest iPad.
-						<!-- Look how big is the difference. -->
 						
-						Another times, to look more friendly for the user, the content has to be constructed differently depending on the screen size. 
+						Another time, to look more friendly for the user, the content has to be constructed differently depending on the screen size. 
 						
 						Each of this exception is basically an if in the code. 
 					</aside>
@@ -170,7 +167,7 @@
 
 						Instead of making exceptions we describe the behavior for each variant.
 						
-						We use `SizeVariants` to define things such us,
+						We use this type to define things such us,
 						
 						* ⏭ insets,
 						* ⏭ ratio of UI elements, 
@@ -226,21 +223,21 @@
 						</code>
 					</pre>
 					<aside class="notes" data-markdown>
-						`SizeVariants` is simple generic struct.
+						If you take a look on `SizeVariants` is's a simple, generic struct.
 						
 						It should define variants in a way that fits to the product you are building.
 						
-						For example, Lake is iPad-first app
+						For example, Lake is iPad-first,
 						
-						⏭ and we use regular as default variant. It handles all iPads in portrait orientation (excluding split view ofc).
+						⏭ and we use regular as our default variant. It handles all iPads in portrait orientation (excluding split view).
 						
-						⏭ In our case it's common that iPads in landscape orientation have it's dedicated layout,
+						⏭ In our case it's common that iPads in landscape orientation have their dedicated layout,
 						so we have a variant called wide.
 						
 						⏭ Compact is basically iPhone in Portrait (as we don't support landscape for iPhone in our app).
-						To support edge cases for smaller iPhones we introduced
+						To handle edge cases for smaller iPhones we introduced two more types
 						
-						⏭ short which handles iPhones with screen smaller than 4.7 inches.
+						⏭ short which takes care of iPhones with screen smaller than 4.7 inches.
 
 						⏭ And small for the smallest iPhones with 4 inches screen size.
 						
@@ -257,7 +254,8 @@
 						### Eliminate repetitive work <!-- .element: class="gradient-text" -->
 						
 						Notes:
-						The best way I know to eliminate repetitive UI work
+						Next topic on my list of UI frustrations is repetitive work.
+						The best way I know to eliminate it
 					</script>
 				</section>
 				<section data-auto-animate data-markdown>
@@ -281,8 +279,6 @@
 						the Design System.
 						
 						Simply create a framework that will let you build UI from reusable components
-						
-						just like playing LEGO bricks.
 
 						✋
 					</script>
@@ -292,7 +288,7 @@
 						## The Design System <!-- .element: class="gradient-text" -->
 						
 						Notes:
-						There are many ways to create a Design System, 
+						There are many ways you can approach it, 
 
 						however there is one significant thing I've learned over the years.
 						
@@ -308,16 +304,15 @@
 				<section data-auto-animate data-markdown>
 					<script type="text/template">
 						## The Design System <!-- .element: class="gradient-text" -->
-						<!-- TODO: ADD GRAPHIC -->
 						* Designers
 						* UX Researchers
 						* Product Owners
 						* Developers
+
 						Notes:
 						And by Users I mean 
-						* Designers
-						* UX Researchers
-						* Product Owners
+						* ofc Designers and UX Researchers
+						* but also Product Owners
 						* and us, Developers
 
 						To get maximum out of The Design System
@@ -366,7 +361,7 @@
 					</pre>
 					
 					<aside class="notes" data-markdown>
-						You can start from defining tokens, which are parameters you can use to describe components.
+						You can start from defining tokens, which are parameters we will later use to style components.
 						
 						Like Fonts, Colors, Icons, Spaces etc.
 
@@ -409,7 +404,7 @@
 						Then think about all possible states you want your controls to have.
 
 						* ⏭ For example the normal state, when no user action is being performed.
-						* ⏭ highlighted, when user taps or press the control
+						* ⏭ highlighted, when user taps the control
 						* ⏭ and disabled, when no user interaction is possible.
 
 						✋
@@ -432,19 +427,21 @@
 					</div>
 					<aside class="notes" data-markdown>
 						Let's follow an example of styling Call To Action Button like this one.
+
+						It has some font, corner radius and background color that changes with a tap.
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>Style Components</h2>
 					<div style="margin-left: 1rem;">
 						<img src="./assets/button-animation.gif" />
 					</div>
 					<pre>
-						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="2-3|7-8|14-25|26-35">
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="2-4|8-9|15-26|27-36">
 							<script type="text/template">
 							extension DSTokens.Fonts {	
-								static let button = SizeVariants<DSFont>(regular: buttons)
-								private static let buttons = DSFont.systemFont(ofSize: 17, weight: .medium)
+								static let button = SizeVariants<DSFont>(
+									regular: DSFont.systemFont(ofSize: 17, weight: .medium)
+								)
 							}
 
 							extension DSStyles.Texts {
@@ -459,7 +456,7 @@
 											regular: [
 												.normal: .init(
 													backgroundColor: DSTokens.Colors.accentPrimaryDefault,
-													cornerRadius: DSTokens.CornerRadiuses.l
+													cornerRadius: DSTokens.CornerRadiuses.s
 												),
 												.highlighted: .init(
 													backgroundColor: DSTokens.Colors.accentPrimaryHighlighted,
@@ -483,10 +480,10 @@
 						</code>
 					</pre>
 					<aside class="notes" data-markdown>
-						* first we define font for a button
-						* ⏭ later we use it to create a text style, with specific text color
-						* ⏭ and then we apply attributes for control states, such us background color and corner radius
-						* ⏭ and at the end, we provide different content insets.
+						* first we define font for a button, as a SizeVariant of DSFont, which is the same for each screen size, because we only provide regular Size Variant
+						* ⏭ later we use it by calling a helper method and converting into `ViewAttributes` with specific text color
+						* ⏭ and then we convert text style we just defined to a `ButtonAttributes` by applying attributes for normal and highlighted control states, such us background color and corner radius
+						* ⏭ and different content insets for iphones and ipads.
 
 						✋
 					</aside>
@@ -514,15 +511,17 @@
 						</code>
 					</pre>
 					<aside class="notes" data-markdown>
-						For better understanding, let's take a look on attributes that define style of a component.
-						This is just an example of possible parameters for a view component. 
-						The properties that describe a component can be different depending on your Design System.
+						For better understanding, let's take a look on example attributes that define style of a view component.
+						Things like background color, corner radius, some border or shadow.
+						How you define those properties depend on how the Design System looks.
+
+						✋
 					</aside>
 				</section>
 				<section data-markdown>
 					<script type="text/template">
 						## Applying attributes to a Button
-						```swift []
+						```swift [|14-18|20,22|21|23]
 						/// Design System Button Style.
 						///
 						/// Applies ``ButtonAttributes`` to a button.
@@ -536,8 +535,11 @@
 							///
 							/// - Parameter configuration : The properties of the button.
 							public func makeBody(configuration: Configuration) -> some View {
-								let currentState: ControlState = configuration.isPressed ? .highlighted : .normal
-								let currentStateAttributes = attributes.stateAttributes[currentState] ?? attributes.stateAttributes[.normal]
+								let currentState: ControlState = configuration.isPressed 
+									? .highlighted 
+									: .normal
+								let currentStateAttributes = attributes.stateAttributes[currentState] 
+									?? attributes.stateAttributes[.normal]
 								configuration.label
 									.apply(textAttributes: currentStateAttributes?.textAttributes)
 									.padding(attributes.contentInsets)
@@ -549,41 +551,19 @@
 						Note:
 						To apply attributes to a component create set of methods and types.
 						
-						Like for `Button` in `SwiftUI` where you can implement a struct conforming to `ButtonStyle`. 
-					</script>
-				</section>
-				<section data-markdown>
-					<script type="text/template">
-						## Applying attributes to a Text
-						```swift []
-						/// Applies ``TextAttributes`` for given view.
-						///
-						/// - Parameters:
-						///   - attributes: The ``TextAttributes`` to apply.
-						/// - Returns: Modified View.
-						@ViewBuilder func apply(textAttributes: TextAttributes) -> some View {
-							self.if(textAttributes.lineSpacing) { view, lineSpacing in
-								view.lineSpacing(lineSpacing)
-							}
-							.font(Font(textAttributes.font))
-							.foregroundColor(Color(dsColor: textAttributes.color))
-							.if(textAttributes.alignment) { view, alignment in
-								view.multilineTextAlignment(alignment)
-							}
-						}
-						```
-						Note:
-						Because there is no such thing like `TextStyle` in `SwiftUI` ,
-						`TextAttributes` are applied by a function.
+						Like for `Button` in `SwiftUI` where you can implement a struct conforming to `ButtonStyle`.
 
-						✋
+						* ⏭ You can see that attributes for current control stated
+						* ⏭ are applied by delegating text and view attributes is separate methods,
+						* ⏭ also padding is being added
+						* ⏭ and changes of control state are animated
 					</script>
 				</section>
 				<section data-markdown>
 					<script type="text/template">
-						## Applying attributes to a View
-						```swift []
-						/// Applies View Attributes for given view.
+						## Applying attributes to a UIView
+						```swift [|12,15]
+						/// Applies ViewAttributes for given UIView.
 						/// - Parameter attributes: The View Attributes to apply on a view.
 						public func apply(attributes: ViewAttributes) {
 							if let backgroundColor = attributes.backgroundColor {
@@ -603,15 +583,22 @@
 						```
 						Note:
 						In `UIKit` we can use same attributes, however we have to write separate functions applying styles.
+						As our controls have different API.
 
 						✋
 
-						There are many more helpers like the ones I've shown.
+						There are more methods like those. 
 						
-						The thing is, you create them once and use them later on, so there is no sense for me 
-						to go though them on this talk.
+						Good thing is the attributes are composable so for example ViewAttributes contains ShadowAttributes and BorderAttributes.
+						⏭ So you can compose functions applying those attributes as well.
+
+						And you write them once to use them later on.
+						
+						However this is not what I want to dig into today.
 						
 						If you are interested there is an repository on my github, where you can find more details.
+
+						Not all is pushed yet, but you can expect this soon.
 
 						✋✋✋🚰
 					</script>
@@ -635,6 +622,10 @@
 						It should look like this.
 						
 						Nothing super fancy, but it's slightly different on each device.
+
+						It might be not visible on first look, but the ratio of the banner is different on iPhones and iPads 
+						
+						and the title font on iPhone SE is smaller.
 						
 						✋✋✋🚰
 					</aside>
@@ -643,7 +634,7 @@
 				<section data-auto-animate>
 					<h2>Feature level of Styles</h2>
 					<pre>
-						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|2-3">
+						<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|2-3|5-18">
 							<script type="text/template">
 							enum WWDCBannerStyle {
 								static let container = DSStyles.Shadows.banner
@@ -672,11 +663,10 @@
 						
 						⏭ Like taking already defined shadow and converting it to `ViewAttributes` with specific corner radius.
 
-						<!-- Those styles can be used lated on with `UIKit` or `SwiftUI`. -->
+						⏭ Similar approach we use to declare other styles. We basically take what Design System provides and build on top of that.
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>SwiftUI</h2>
 					<div class="r-hstack">
 						<img src="./assets/swiftUI/01.png" />
 						<pre data-id="code-animation">
@@ -701,16 +691,17 @@
 						</pre>
 					</div>
 					<aside class="notes" data-markdown>
-						Having styles defined we can start building UI. Here we have just a background of the banner.
+						Having styles defined we can start building UI. 
+						
+						Here we have just a background of the banner.
 
 						⏭  We already provide asset as a `SizeVariant`.
 						
-						We could take advantage of Xcode assets and instead of universal define iPhone and iPad separately.
+						You could now ask, why we don't take advantage of Xcode assets and instead of universal define iPhone and iPad separately.
 						However split view would then look really bad.
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>SwiftUI</h2>
 					<div class="r-hstack">
 						<img src="./assets/swiftUI/02.png" />
 						<pre data-id="code-animation">
@@ -742,7 +733,6 @@
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>SwiftUI</h2>
 					<div class="r-hstack">
 						<img src="./assets/swiftUI/02.png" />
 						<pre data-id="code-animation">
@@ -791,7 +781,6 @@
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>SwiftUI</h2>
 					<div class="r-hstack">
 						<img src="./assets/swiftUI/03.png" />
 						<pre data-id="code-animation">
@@ -833,15 +822,14 @@
 						</pre>
 					</div>
 					<aside class="notes" data-markdown>
-						Not bad. 
+						Well, we are going in the right direction. But we are not there yet.
 						
-						However it doesn't look like on the design.
+						It doesn't look like on the design.
 
-						⏭ Let's style new components.
+						⏭ Let's style components we just created.
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>SwiftUI</h2>
 					<div class="r-hstack">
 						<img src="./assets/swiftUI/04.png" />
 						<pre data-id="code-animation">
@@ -895,10 +883,11 @@
 						Agin, few lines of code and UI is transformed.
 
 						The best thing is that it does all the magic for edge cases.
+
+						Let me show you how it behaves.
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>SwiftUI</h2>
 					<video class="demo-video" data-autoplay src="./assets/swiftUI/final.mov"></video>
 					<aside class="notes" data-markdown>
 						It looks good in
@@ -909,12 +898,15 @@
 						You can see, by a banner ratio, that it uses smaller size variants for split view.
 
 						Building our example with `SwiftUI` was pretty straight forward. 
-						But what with UIKit?
+						But what with UIKit? Some of us still have to write UI with it.
+						For those Design System has to support both frameworks.
+
+						Let's see if we can adopt it by building same example with UIKit.
+						But first we gonna add some types that will help us.
 					</aside>
 				</section>
 <!-- UIKit -->
 				<section data-auto-animate>
-					<h2>UIKit</h2>
 					<div class="r-hstack">
 						<pre data-id="code-animation">
 							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="|3-5|11-18">
@@ -927,7 +919,7 @@
 
 									private var cancellables: Set<AnyCancellable> = []
 
-									/// Observes ``Layout.screen`` and perform updates when it changes.
+									/// Observes ``Layout.screen`` and perform updatecs when it changes.
 									/// - Parameter layout: Layout observable object, to observe.
 									public func startObserving(layout: Layout) {
 										wrappedValue.startUpdating(
@@ -943,14 +935,17 @@
 						</pre>
 					</div>
 					<aside class="notes" data-markdown>
-						Let me introduce property wrapper that can be handy.
+						Again, this is just an example of how you can approach it.
+						I wanted to make it as clear as possible and declare attributes close to the components.
+						So I thought, if I still have to use UIKit, why not take advantage of property wrappers.
+
+						Here it is.
 
 						⏭ It stores view together with it's attributes.
-						⏭ But it is also able to observe layout and perform updates on screen change.
+						⏭ And it is also able to observe layout and perform updates on screen change.
 					</aside>
 				</section>
 				<section data-auto-animate>
-					<h2>UIKit</h2>
 					<div class="r-hstack">
 						<pre data-id="code-animation">
 							<code class="language-swift hljs" data-trim data-noescape data-line-numbers>
@@ -963,19 +958,21 @@
 										/// - Parameters:
 										///   - attributes: The stream of attributes to apply.
 										///   - cancellables: Cancellable Set to store updates on.
-										func startUpdating(attributes: AnyPublisher<Attributes, Never>, store cancellables: inout Set<AnyCancellable>)
+										func startUpdating(
+											attributes: AnyPublisher<Attributes, Never>, 
+											store cancellables: inout Set<AnyCancellable>
+										)
 									}
 								</script>
 							</code>
 						</pre>
 					</div>
 					<aside class="notes" data-markdown>
-						Of course, if you want your view to be able to self update, 
+						Of course, if you want your view to be able to update with this property wrapper, 
 						you have to make it conform to `AttributedView`.
 					</aside>
 				</section>
 				<section data-auto-animate data-auto-animate-id="view-controller">
-					<h2>UIKit</h2>
 					<div class="r-hstack">
 						<pre data-id="code-animation">
 							<code class="language-swift hljs" data-trim data-noescape data-line-numbers>
@@ -1011,7 +1008,6 @@
 					</aside>
 				</section>
 				<section data-auto-animate data-auto-animate-id="view-controller">
-					<h2>UIKit</h2>
 					<div class="r-hstack">
 						<pre data-id="code-animation">
 							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="4,7,10,13,16|23-27">
@@ -1059,11 +1055,12 @@
 
 						Well, almost. It's `UIKit` it cannot be to easy.
 
-						We have to take care about one more thing.
+						Not sure if you remember, but our our banner had different ratio on iPhone and iPads.
+
+						So have to take care about one more thing.
 					</aside>
 				</section>
 				<section>
-					<h2>UIKit</h2>
 					<div class="r-hstack">
 						<pre data-id="code-animation">
 							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="1-17|18-27">
@@ -1104,14 +1101,17 @@
 					<aside class="notes" data-markdown>
 						Constrains. 
 
-						So we would have a mechanism of refreshing them on screen change instead of doing so manually in every view or view controller.
+						I don't want to manually update them for every view or view controller.
+
+						So here is a wrapper on a Constrain that observes changes and update the constrain.
+
+						⏭ there is also a method that activate and trigger observing layout for array of constrains.
 					</aside>
 				</section>
 				<section>
-					<h2>UIKit</h2>
 					<div class="r-hstack">
 						<pre data-id="code-animation">
-							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="1-17|18-27">
+							<code class="language-swift hljs" data-trim data-noescape data-line-numbers="3-13">
 								<script type="text/template">
 									override func viewDidLoad() {
 										super.viewDidLoad()
@@ -1138,10 +1138,10 @@
 					</aside>
 				</section>
 				<section>
-					<h2>UIKit</h2>
 					<video class="demo-video" data-autoplay src="./assets/uikit-swiftui.mov"></video>
 					<aside class="notes" data-markdown>
-						todo
+						Here you can compare the results for SwiftUI and UIKit.
+						As you can see, they are identical.
 					</aside>
 				</section>
 <!-- ENDING -->
@@ -1179,7 +1179,8 @@
 				hash: true,
 				width: 1920,
   				height: 1080,
-				totalTime: 1500,
+				// totalTime: 1500,2
+				controls: false,
 				// Learn about plugins: https://revealjs.com/plugins/
 				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
 			});
