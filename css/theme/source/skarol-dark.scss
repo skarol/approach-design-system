@@ -1,0 +1,50 @@
+/**
+ * skarol theme for reveal.js.
+ * Author: Karolina Samorek
+ */
+
+
+// Default mixins and settings -----------------
+@import "../template/mixins";
+@import "../template/settings";
+// ---------------------------------------------
+
+// Include theme-specific fonts
+@import url(https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap);
+
+/**
+ * Solarized colors by Ethan Schoonover
+ */
+html * {
+	color-profile: sRGB;
+	rendering-intent: auto;
+}
+
+$accentDefault: #AA49D8;
+$accentHighlighted: #BE7FDD;
+
+$backgroundPrimaryDark: #222222;
+$backgroundSecondaryDark: #353535;
+
+$textPrimaryDark: #9A9899;
+$textSecondaryDark: #bebebe;
+
+// Override theme settings (see ../template/settings.scss)
+$mainFont: 'Poppins', sans-serif;
+$headingFont: 'Poppins', sans-serif;
+
+$headingTextShadow: none;
+$headingTextTransform: none;
+
+$backgroundColor: $backgroundPrimaryDark;
+$mainColor: $textSecondaryDark;
+$headingColor: $textPrimaryDark;
+
+$linkColor: $accentHighlighted;
+$linkColorHover: $mainColor; // lighten( $linkColor, 20% );
+$selectionBackgroundColor: $accentDefault;
+
+
+// Theme template ------------------------------
+@import "../template/theme";
+// ---------------------------------------------
