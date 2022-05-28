@@ -6,6 +6,12 @@ This repository contains my presentation _Approaching Design System in iOS Envir
 
 Presentation was made using [reveal.js](https://github.com/hakimel/reveal.js).
 
+## Source code
+
+The source code of the example used in this presentation is published [here](https://github.com/skarol/plSwiftShowcase).
+
+You can also take a look on [DesignSystemUtils](https://github.com/skarol/DesignSystemUtils) package, as it contains example helpers and basic types to help you get started with building a Design System for your own.
+
 --- 
 <br />
 <div align="center">
